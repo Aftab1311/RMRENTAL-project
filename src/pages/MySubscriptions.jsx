@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { RiMoneyRupeeCircleFill } from "react-icons/ri";
 import { IoSettings } from "react-icons/io5";
 import { FaShoppingBag, FaIdCard } from "react-icons/fa";
@@ -118,7 +118,7 @@ const MySubscriptions = () => {
 
   async function handleCancelRequest(orderId) {
     try {
-      const response = await axios.post("https://rmrental-backend.vercel.app/api/order/raiseCancel",{
+      const response = await axios.post("https://rmrental-backend.vercel.app/api/order/raiseCancel", {
         orderId
       })
 
@@ -129,12 +129,10 @@ const MySubscriptions = () => {
 
     } catch (error) {
       console.log("Error while raising cancel request", error);
-      
+
     }
   }
 
-  console.log(orders);
-  
 
   return (
     <div className="user-profile w-full flex justify-between p-8 bg-[#f1f1f1]">
@@ -146,30 +144,36 @@ const MySubscriptions = () => {
         <div className="w-full flex flex-col justify-between">
           <h1 className="my-8 font-medium text-gray-400">Menu</h1>
           <div className="flex flex-col gap-4 links w-full">
-            {[
-              { icon: <FaShoppingBag />, name: "My Orders", url: "/myorders" },
-              { icon: <FaIdCard />, name: "KYC", url: "/kyc" },
-              {
-                icon: <RiMoneyRupeeCircleFill />,
-                name: "Payment",
-                url: "/payment",
-              },
-              // { icon: <IoSettings />, name: "Setting", url: "/setting" },
-            ].map((item, index) => (
-              <Link
-                to={item.url}
-                key={index}
-                onClick={() => ClickHandler(item.name)}
-                className={`${
-                  activeLink === item.name
-                    ? "text-black font-semibold"
-                    : "text-[grey]"
-                } flex items-center gap-3 text-xl`}
-              >
-                {item.icon}
-                {item.name}
-              </Link>
-            ))}
+            <NavLink
+              to="/myorders"
+              // onClick={() => ClickHandler("My Orders")}
+              className={({ isActive }) =>
+                `${isActive ? "text-black font-semibold" : "text-[grey]"} flex items-center gap-3 text-xl`
+              }
+            >
+              <FaShoppingBag />
+              My Orders
+            </NavLink>
+            <NavLink
+              to="/kyc"
+              // onClick={() => ClickHandler("KYC")}
+              className={({ isActive }) =>
+                `${isActive ? "text-black font-semibold" : "text-[grey]"} flex items-center gap-3 text-xl`
+              }
+            >
+              <FaIdCard />
+              KYC
+            </NavLink>
+            <NavLink
+              to="/payment"
+              // onClick={() => ClickHandler("Payment")}
+              className={({ isActive }) =>
+                `${isActive ? "text-black font-semibold" : "text-[grey]"} flex items-center gap-3 text-xl`
+              }
+            >
+              <RiMoneyRupeeCircleFill />
+              Payment
+            </NavLink>
           </div>
         </div>
       </div>
@@ -224,11 +228,10 @@ const MySubscriptions = () => {
                             </td>
                             <td className="whitespace-nowrap px-3 py-2">
                               <button
-                                className={`rounded-lg py-2 px-2 ${
-                                  endDate <= new Date()
-                                    ? "bg-green-600"
-                                    : "bg-gray-400 cursor-not-allowed"
-                                } text-white`}
+                                className={`rounded-lg py-2 px-2 ${endDate <= new Date()
+                                  ? "bg-green-600"
+                                  : "bg-gray-400 cursor-not-allowed"
+                                  } text-white`}
                                 disabled={endDate > new Date()} // Disable if endDate is greater than today
                                 onClick={() =>
                                   handlePayNow(
@@ -244,12 +247,12 @@ const MySubscriptions = () => {
                             <td className="whitespace-nowrap px-3 py-2">
                               <button
                                 className="rounded-lg py-2 px-2 bg-red-600 text-white"
-                                onClick={()=>handleCancelRequest(order._id)}
+                                onClick={() => handleCancelRequest(order._id)}
                               >
                                 {
                                   order?.cancellationRequest
-                                  ? 'Cancelled'
-                                  : 'Cancel'
+                                    ? 'Cancelled'
+                                    : 'Cancel'
                                 }
                               </button>
                             </td>

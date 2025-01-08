@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { RiMoneyRupeeCircleFill } from "react-icons/ri";
 import { FaShoppingBag, FaIdCard } from "react-icons/fa";
 import storageService from "../service/storage.service";
@@ -38,11 +38,11 @@ const KYCPage = () => {
       const response = await getKYCStatusAPI.getKYCStatus(user?._id);
 
       console.log(response);
-      
+
       if (response.kycStatus) {
         setKycStatus(response.kycStatus);
       }
-  
+
       if (response.rejectReason) {
         setRejectReason(response.rejectReason); // Assuming you have a state for rejectReason
       } else {
@@ -52,10 +52,10 @@ const KYCPage = () => {
       setKycStatus(null);
       setRejectReason(null); // Clear rejectReason in case of an error
     }
-    
+
     setLoading(false);
   };
-  
+
 
   useEffect(() => {
     fetchKYCStatus();
@@ -123,29 +123,36 @@ const KYCPage = () => {
         <div className="w-full flex flex-col justify-between">
           <h1 className="my-8 font-medium text-gray-400">Menu</h1>
           <div className="flex flex-col gap-4 links w-full">
-            {[
-              { icon: <FaShoppingBag />, name: "My Orders", url: "/myorders" },
-              { icon: <FaIdCard />, name: "KYC", url: "/kyc" },
-              {
-                icon: <RiMoneyRupeeCircleFill />,
-                name: "Payment",
-                url: "/payment",
-              },
-            ].map((item, index) => (
-              <Link
-                to={item.url}
-                key={index}
-                onClick={() => ClickHandler(item.name)}
-                className={`${
-                  activeLink === item.name
-                    ? "text-black font-semibold"
-                    : "text-[grey]"
-                } flex items-center gap-3 text-xl`}
-              >
-                {item.icon}
-                {item.name}
-              </Link>
-            ))}
+            <NavLink
+              to="/myorders"
+              // onClick={() => ClickHandler("My Orders")}
+              className={({ isActive }) =>
+                `${isActive ? "text-black font-semibold" : "text-[grey]"} flex items-center gap-3 text-xl`
+              }
+            >
+              <FaShoppingBag />
+              My Orders
+            </NavLink>
+            <NavLink
+              to="/kyc"
+              // onClick={() => ClickHandler("KYC")}
+              className={({ isActive }) =>
+                `${isActive ? "text-black font-semibold" : "text-[grey]"} flex items-center gap-3 text-xl`
+              }
+            >
+              <FaIdCard />
+              KYC
+            </NavLink>
+            <NavLink
+              to="/payment"
+              // onClick={() => ClickHandler("Payment")}
+              className={({ isActive }) =>
+                `${isActive ? "text-black font-semibold" : "text-[grey]"} flex items-center gap-3 text-xl`
+              }
+            >
+              <RiMoneyRupeeCircleFill />
+              Payment
+            </NavLink>
           </div>
         </div>
       </div>
@@ -175,7 +182,7 @@ const KYCPage = () => {
                 <div className="flex items-center  bg-red-100 text-red-800 p-4 rounded">
                   <FaUpload className="mr-2" />
                   <span className="">Your KYC was rejected and Reason of Rejection of KYC : {rejectedReason}</span>
-                 
+
                 </div>
               )}
             </div>
@@ -249,9 +256,8 @@ const KYCPage = () => {
 
                   <button
                     type="submit"
-                    className={`mt-4 bg-blue-500 text-white py-2 px-4 rounded ${
-                      isSubmitting ? "cursor-not-allowed" : "cursor-pointer"
-                    }`}
+                    className={`mt-4 bg-blue-500 text-white py-2 px-4 rounded ${isSubmitting ? "cursor-not-allowed" : "cursor-pointer"
+                      }`}
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Uploading..." : "Submit KYC"}

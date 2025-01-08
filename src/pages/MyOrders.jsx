@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { RiMoneyRupeeCircleFill } from "react-icons/ri";
 import { IoSettings } from "react-icons/io5";
 import { FaShoppingBag, FaIdCard } from "react-icons/fa";
@@ -150,30 +150,36 @@ const MyOrders = () => {
         <div className="w-full flex flex-col justify-between">
           <h1 className="my-8 font-medium text-gray-400">Menu</h1>
           <div className="flex flex-col gap-4 links w-full">
-            {[
-              { icon: <FaShoppingBag />, name: "My Orders", url: "/myorders" },
-              { icon: <FaIdCard />, name: "KYC", url: "/kyc" },
-              {
-                icon: <RiMoneyRupeeCircleFill />,
-                name: "Payment",
-                url: "/payment",
-              },
-              // { icon: <IoSettings />, name: "Setting", url: "/setting" },
-            ].map((item, index) => (
-              <Link
-                to={item.url}
-                key={index}
-                onClick={() => ClickHandler(item.name)}
-                className={`${
-                  activeLink === item.name
-                    ? "text-black font-semibold"
-                    : "text-[grey]"
-                } flex items-center gap-3 text-xl`}
-              >
-                {item.icon}
-                {item.name}
-              </Link>
-            ))}
+            <NavLink
+              to="/myorders"
+              // onClick={() => ClickHandler("My Orders")}
+              className={({ isActive }) =>
+                `${isActive ? "text-black font-semibold" : "text-[grey]"} flex items-center gap-3 text-xl`
+              }
+            >
+              <FaShoppingBag />
+              My Orders
+            </NavLink>
+            <NavLink
+              to="/kyc"
+              // onClick={() => ClickHandler("KYC")}
+              className={({ isActive }) =>
+                `${isActive ? "text-black font-semibold" : "text-[grey]"} flex items-center gap-3 text-xl`
+              }
+            >
+              <FaIdCard />
+              KYC
+            </NavLink>
+            <NavLink
+              to="/payment"
+              // onClick={() => ClickHandler("Payment")}
+              className={({ isActive }) =>
+                `${isActive ? "text-black font-semibold" : "text-[grey]"} flex items-center gap-3 text-xl`
+              }
+            >
+              <RiMoneyRupeeCircleFill />
+              Payment
+            </NavLink>
           </div>
         </div>
       </div>
@@ -412,9 +418,8 @@ const MyOrders = () => {
               </div>
 
               <button
-                className={`bg-green-500 text-white rounded-md py-2 ${
-                  loading ? "cursor-not-allowed" : "cursor-pointer"
-                }`}
+                className={`bg-green-500 text-white rounded-md py-2 ${loading ? "cursor-not-allowed" : "cursor-pointer"
+                  }`}
                 disabled={loading}
               >
                 {loading ? <div>Sending...</div> : <div>Send</div>}
