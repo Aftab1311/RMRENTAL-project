@@ -7,6 +7,7 @@ import { FaShoppingBag, FaIdCard } from "react-icons/fa";
 import storageService from "../service/storage.service";
 import userService from "../service/user.service"; // Import userService for orders
 import { AXIOS_INSTANCE } from "../service";
+import axios from "axios";
 
 // SubscriptionStatus Component
 const SubscriptionStatus = ({ startDate, endDate }) => {
@@ -115,6 +116,26 @@ const MySubscriptions = () => {
     }
   };
 
+  async function handleCancelRequest(orderId) {
+    try {
+      const response = await axios.post("https://rmrental-backend.vercel.app/api/order/raiseCancel",{
+        orderId
+      })
+
+      if (response.status === 200) {
+        alert("Cancel request raised successfully");
+        window.location.reload();
+      }
+
+    } catch (error) {
+      console.log("Error while raising cancel request", error);
+      
+    }
+  }
+
+  console.log(orders);
+  
+
   return (
     <div className="user-profile w-full flex justify-between p-8 bg-[#f1f1f1]">
       <div className="user-profile-left flex flex-col py-8 px-10 w-[20%] shadow-md shadow-[#dadada] bg-white rounded-lg">
@@ -170,6 +191,7 @@ const MySubscriptions = () => {
                         <th className="w-1/5 px-3">Amount</th>
                         <th className="w-1/5 px-3">Status</th>
                         <th className="w-1/5 px-3">Action</th>
+                        <th className="w-1/5 px-3">Cancel Request</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -217,6 +239,18 @@ const MySubscriptions = () => {
                                 }
                               >
                                 Pay Now
+                              </button>
+                            </td>
+                            <td className="whitespace-nowrap px-3 py-2">
+                              <button
+                                className="rounded-lg py-2 px-2 bg-red-600 text-white"
+                                onClick={()=>handleCancelRequest(order._id)}
+                              >
+                                {
+                                  order?.cancellationRequest
+                                  ? 'Cancelled'
+                                  : 'Cancel'
+                                }
                               </button>
                             </td>
                           </tr>

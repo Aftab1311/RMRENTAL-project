@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import $ from "jquery"; // Import jQuery
 import { AXIOS_INSTANCE } from "../service";
 import toast from "react-hot-toast";
-
+import { MdDelete } from "react-icons/md";
+import axios from "axios";
 
 const Modal = ({ title, children, onClose }) => {
   const [editingSubscription, setEditingSubscription] = useState(null);
@@ -74,8 +75,24 @@ const Modal = ({ title, children, onClose }) => {
     }
   };
 
+  async function deleteOrder(id) {
+    try {
+      const repsonse = await axios.delete(`https://rmrental-backend.vercel.app/api/orders/${id}`);
+
+      if (repsonse.status === 200) {
+        toast.success("Order deleted successfully");
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log("Error while deleting order:", error);
+    }
+  }
+
+  console.log(children.orders);
+  
+
   return (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50 min-h-[500px] overflow-y-scroll ">
+    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50 h-screen overflow-y-scroll ">
       <div className="bg-white p-6 rounded-lg shadow-lg w-[85%] flex flex-col items-center ">
         <h2 className="text-xl font-semibold mb-4 text-center">{title}</h2>
         <table className="subscriptions-table w-full mt-6 border-collapse border border-gray-300 shadow-lg rounded-lg ">
@@ -88,7 +105,9 @@ const Modal = ({ title, children, onClose }) => {
               <th className="text-center px-4 py-3 text-gray-700 font-semibold">End Date</th>
               <th className="text-center px-4 py-3 text-gray-700 font-semibold">Subscription Status</th>
               <th className="text-center px-4 py-3 text-gray-700 font-semibold">Order Status</th>
+              <th className="text-center px-4 py-3 text-gray-700 font-semibold">Cancel request</th>
               <th className="text-center px-4 py-3 text-gray-700 font-semibold">Update</th>
+              <th className="text-center px-4 py-3 text-gray-700 font-semibold">Delete Order</th>
             </tr>
           </thead>
           <tbody>
@@ -119,6 +138,7 @@ const Modal = ({ title, children, onClose }) => {
                   />
                 </td>
                 <td className={`${getStatusColor(sub.status)} text-center px-4 py-3`} >{sub.status}</td>
+                <td className='text-center px-4 py-3'>{sub.cancellationRequest? "Yes" : "No"}</td>
                 <td className="text-center px-4 py-3">
                   <button
                     className="w-[100px] rounded-full bg-gray-600 text-white py-2 hover:bg-gray-700 transition duration-200"
@@ -127,6 +147,7 @@ const Modal = ({ title, children, onClose }) => {
                     Edit
                   </button>
                 </td>
+                <td className='text-center px-4 py-3'><MdDelete size={25} onClick={() => deleteOrder(sub._id)} className="text-red-500 cursor-pointer" /></td>
               </tr>
             ))}
           </tbody>
@@ -190,7 +211,7 @@ const Modal = ({ title, children, onClose }) => {
         >
           Close
         </button>
-        
+
       </div>
     </div>
   )
